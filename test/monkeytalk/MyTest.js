@@ -2,7 +2,7 @@ load("libs/MonkeyTalkAPI.js");
 
 var Test = {};
 
-/*** script -- script01 ***/
+/*** script -- MyTest ***/
 Test.MyTest = function(app) {
   MT.Script.call(this, app, "MyTest.js");
 };
@@ -21,7 +21,16 @@ MT.Application.prototype.myTest = function() {
 Test.MyTest.prototype.run = function() {
   var app = this.app;
 
+  // take a screenshot
   app.device().screenshot();
 
-  // verify app text
+  // verify text in main div
+  app.label('main').verify('Hello World', {
+    thinktime:"1000",
+    retrydelay:"1000",
+    timeout:"30000"
+  });
+
+  // some log output
+  app.debug().print("Finished MyTest");
 };

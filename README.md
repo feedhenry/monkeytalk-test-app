@@ -36,6 +36,11 @@ Expected output should be
 
     SOME OUTPUT
 
+Further Reading
+--------------
+
+* MonkeyTalk Documentation - https://www.gorillalogic.com/monkeytalk-documentation
+
 Notes
 ----
 * Monkeytalk instrumentation of apps is only available for iOS and Android at time of writing
