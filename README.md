@@ -32,9 +32,29 @@ Run the MonkeyTalk test against the running app in the emulator
 
     ant test
 
-Expected output should be
+Expected output should be something like:
 
-    SOME OUTPUT
+    local-test-android-emulator:
+    [monkeytalk:run] running suite TestSuite.mts...
+    [monkeytalk:run] MonkeyTalk v1.0.47_976 - 2013-04-22 20:23:15 MDT - Copyright 2012-2013 Gorilla Logic, Inc. - www.gorillalogic.com
+    [monkeytalk:run]
+    [monkeytalk:run] -start suite (1 test)
+    [monkeytalk:run]   1 : MyTest
+    [monkeytalk:run] Device * screenshot
+    [monkeytalk:run] Label main verify
+    [monkeytalk:run] Label main verify "Hello World"
+    [monkeytalk:run] Debug * print "Finished MyTest"
+    [monkeytalk:run] Finished MyTest
+    [monkeytalk:run]   -> OK
+    [monkeytalk:run] -end suite
+    [monkeytalk:run] result: OK
+    [monkeytalk:run]
+    [monkeytalk:run] ...done
+
+    test:
+
+    BUILD SUCCESSFUL
+    Total time: 3 seconds
 
 Further Reading
 --------------
