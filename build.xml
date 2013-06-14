@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="monkeytalk-test-app"
+  xmlns:monkeytalk="antlib:com.gorillalogic.monkeytalk.ant"
+  xmlns:cloud="antlib:com.gorillalogic.cloud.ant">
+
+  <!-- load env vars as props -->
+  <property environment="env"/>
+  <!-- Ant props -->
+  <property name="ant.lib" value="${basedir}/ant.lib"/>
+  <property name="ant.lib.user" value="${user.home}/.ant/lib"/>
+  <!-- Need android adb tool for local testing -->
+  <property name="android.adb" value="${env.ANDROID_SDK_HOME}/platform-tools/adb"/>
+  <!-- cloud monkey properties -->
+  <!-- https://www.gorillalogic.com/cloudmonkey-documentation/cloud-ant-runner -->
+  <property name="cm.pollInterval" value="7"/>
+  <property name="cm.typeAndroidAndroid" value="Android"/>
+  <property name="cm.typeIOS" value="iOS"/>
+  <property name="cm.thinktime" value="1000"/>
+  <property name="cm.timeout" value="10000"/>
+  <property name="cm.verbose" value="true"/>
+  <target name="require-cm-userpass">
+    <fail unless="cm.username">Must set 'cm.username' and 'cm.password' for logging into Cloud Monkey e.g. ant -Dcm.username=user -Dcm.password=pass</fail>
+    <fail unless="cm.password">Must set 'cm.username' and 'cm.password' for logging into Cloud Monkey e.g. ant -Dcm.username=user -Dcm.password=pass</fail>
+  </target>
+  <!-- monkey talk properties (some use the cloud monkey value above) -->
+  <!-- https://www.gorillalogic.com/monkeytalk-documentation/monkeytalk-user-guide/ant-runner -->
+  <property name="mt.agentAndroidEmulator" value="AndroidEmulator"/>
+  <property name="mt.agentIOS" value="iOS"/>
+  <property name="mt.thinktime" value="${cm.thinktime}"/>
+  <property name="mt.timeout" value="${cm.timeout}"/>
+  <property name="mt.verbose" value="${cm.verbose}"/>
+  <!-- fh properties -->
+  <property name="fh.reportDir" value="${basedir}/test/report"/>
+  <property name="fh.resourceDir" value="${basedir}/test/fixtures/monkeytalk"/>
+  <property name="fh.testDir" value="${basedir}/test/monkeytalk"/>
+  <property name="fh.testSuite" value="${fh.testDir}/TestSuite.mts"/>
+  <property name="fh.binaryAndroid" value="${fh.resourceDir}/android.apk"/>
+  <!-- iOS Simulator requires an x86 arch build -->
+  <property name="fh.binaryIOSSimulator" value="${fh.resourceDir}/ios_sim.zip"/>
+  <!-- iOS Devices require an armv7 arch build -->
+  <property name="fh.binaryIOSDevice" value="${fh.resourceDir}/ios_device.zip"/>
+
+  <target name="copy-libs"
+    description="Copy MonkeyTalk and CloudMonkey libs to ${user.home}/.ant/lib so they are automatically included">
+    <mkdir dir="${ant.lib.user}"/>
+    <copy todir="${ant.lib.user}">
+      <fileset dir="${ant.lib}">
+        <include name="**/*.jar"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="local-test-android-emulator"
+    description="Run tests on Android emulator locally (emulator must already be running with the app started)"
+    depends="copy-libs">
+    <monkeytalk:run agent="${mt.agentAndroidEmulator}"
+      adb="${android.adb}"
+      script="${fh.testSuite}"
+      reportdir="${fh.reportDir}"
+      thinktime="${mt.thinktime}"
+      timeout="${mt.timeout}"
+      verbose="${mt.verbose}"/>
+  </target>
+
+<!--   <target name="local-test-android-device"
+    description="Run tests on Android device locally (device must already be availaible on local wifi with the app started)"
+    depends="copy-libs">
+    <monkeytalk:run agent="${mt.agentAndroidEmulator}"
+      adb="${android.adb}"
+      script="${fh.testSuite}"
+      reportdir="${fh.reportDir}"
+      thinktime="${mt.thinktime}"
+      timeout="${mt.timeout}"
+      verbose="${mt.verbose}" />
+  </target> -->
+
+  <target name="local-test-ios-simulator"
+    description="Run tests on iOS simulator locally (simulator must already be running with the app started)"
+    depends="copy-libs">
+    <monkeytalk:run agent="${mt.agentIOS}"
+      script="${fh.testSuite}"
+      reportdir="${fh.reportDir}"
+      thinktime="${mt.thinktime}"
+      timeout="${mt.timeout}"
+      verbose="${mt.verbose}" />
+  </target>
+
+<!--   <target name="local-test-ios-device"
+    description="Run tests on iOS device locally (device must already be availaible on local wifi with the app started)"
+    depends="copy-libs">
+    <monkeytalk:run agent="${mt.agentIOS}"
+      script="${fh.testSuite}"
+      reportdir="${fh.reportDir}"
+      thinktime="${mt.thinktime}"
+      timeout="${mt.timeout}"
+      verbose="${mt.verbose}" />
+  </target> -->
+
+  <target name="cloud-test-android-emulator"
+    depends="copy-libs,require-cm-userpass"
+    description="Run tests on Android emulators in Cloud Monkey">
+    <cloud:run pollInterval="${cm.pollInterval}"
+      verbose="${cm.verbose}"
+      reportDir="${fh.reportDir}"
+      timeout="${cm.timeout}"
+      thinktime="${cm.thinktime}"
+      username="${cm.username}"
+      password="${cm.password}"
+      type="${cm.typeAndroidAndroid}"
+      binary="${fh.binaryAndroid}"
+      script="${fh.testSuite}">
+<!--       <cloud:param value="Android 2.2 : 480x800 : mdpi" />
+      <cloud:param value="Android 2.2 : 480x800 : hdpi" />
+      <cloud:param value="Android 2.2 : 480x854 : hdpi" />
+      <cloud:param value="Android 2.3.3 : 480x800 : mdpi" />
+      <cloud:param value="Android 2.3.3 : 480x800 : hdpi" /> -->
+      <cloud:param value="Android 2.3.3 : 480x854 : hdpi" />
+<!--       <cloud:param value="Android 3.2 : 1280x800 : mdpi" />
+      <cloud:param value="Android 4.0.3 : 480x800 : mdpi" />
+      <cloud:param value="Android 4.0.3 : 480x800 : hdpi" /> -->
+      <cloud:param value="Android 4.0.3 : 480x854 : hdpi" />
+<!--       <cloud:param value="Android 4.0.3 : 1280x720 : mdpi" />
+      <cloud:param value="Android 4.0.3 : 1280x720 : hdpi" />
+      <cloud:param value="Android 4.0.3 : 720x1280 : xhdpi" />
+      <cloud:param value="Android 4.0.3 : 1280x800 : mdpi" />
+      <cloud:param value="Android 4.0.3 : 1280x800 : hdpi" />
+      <cloud:param value="Android 4.1 : 480x800 : mdpi" />
+      <cloud:param value="Android 4.1 : 480x800 : hdpi" /> -->
+      <cloud:param value="Android 4.1 : 480x854 : hdpi" />
+<!--       <cloud:param value="Android 4.1 : 1280x720 : mdpi" />
+      <cloud:param value="Android 4.1 : 1280x720 : hdpi" />
+      <cloud:param value="Android 4.1 : 720x1280 : xhdpi" />
+      <cloud:param value="Android 4.1 : 1280x800 : mdpi" />
+      <cloud:param value="Android 4.1 : 1280x800 : hdpi" />
+      <cloud:param value="Android 4.2 : 480x800 : hdpi" /> -->
+      <cloud:param value="Android 4.2 : 480x854 : hdpi" />
+<!--       <cloud:param value="Android 4.2 : 720x1280 : xhdpi" />
+      <cloud:param value="Android 4.2 : 1280x800 : mdpi" />
+      <cloud:param value="Android 4.2 : 1024x600 : mdpi" />
+      <cloud:param value="Android 4.2 : 800x1280 : hdpi" /> -->
+    </cloud:run>
+  </target>
+
+  <target name="cloud-test-android-device"
+    depends="copy-libs,require-cm-userpass"
+    description="Run tests on Android devices in Cloud Monkey">
+    <cloud:run pollInterval="${cm.pollInterval}"
+      verbose="${cm.verbose}"
+      reportDir="${fh.reportDir}"
+      timeout="${cm.timeout}"
+      thinktime="${cm.thinktime}"
+      username="${cm.username}"
+      password="${cm.password}"
+      type="${cm.typeAndroidAndroid}"
+      binary="${fh.binaryAndroid}"
+      script="${fh.testSuite}">
+<!--       <cloud:param value="samsung==Nexus S 4G==Nexus S 4G" />
+      <cloud:param value="samsung==Galaxy SII==GT-I9100" />
+      <cloud:param value="samsung==Transform Ultra==SPH-M930" />
+      <cloud:param value="samsung==Galaxy Nexus==Galaxy Nexus" />
+      <cloud:param value="motorola==Atrix 2==MB865" />
+      <cloud:param value="Sony Ericsson==Xperia Arc S==LT18a" />
+      <cloud:param value="HTC==One S==HTC VLE_U" />
+      <cloud:param value="Motorola==Xoom==Xoom" /> -->
+      <cloud:param value="samsung==Galaxy SIII==SCH-I535" />
+    </cloud:run>
+  </target>
+
+  <target name="cloud-test-ios-simulator"
+    depends="copy-libs,require-cm-userpass"
+    description="Run tests on iOS Simulators in Cloud Monkey">
+    <cloud:run pollInterval="${cm.pollInterval}"
+      verbose="${cm.verbose}"
+      reportDir="${fh.reportDir}"
+      timeout="${cm.timeout}"
+      thinktime="${cm.thinktime}"
+      username="${cm.username}"
+      password="${cm.password}"
+      type="${cm.typeIOS}"
+      binary="${fh.binaryIOSSimulator}"
+      script="${fh.testSuite}">
+<!--             <cloud:param value="iOS 5.0 : iPhone" />
+      <cloud:param value="iOS 5.0 : iPhone (Retina 3.5-inch)" />
+      <cloud:param value="iOS 5.0 : iPad" />
+      <cloud:param value="iOS 5.0 : iPad (Retina)" />
+      <cloud:param value="iOS 5.1 : iPhone" /> -->
+      <cloud:param value="iOS 5.1 : iPhone (Retina 3.5-inch)" />
+<!--       <cloud:param value="iOS 5.1 : iPad" />
+      <cloud:param value="iOS 5.1 : iPad (Retina)" />
+      <cloud:param value="iOS 6.0 : iPhone" />
+      <cloud:param value="iOS 6.0 : iPhone (Retina 3.5-inch)" /> -->
+      <cloud:param value="iOS 6.0 : iPhone (Retina 4-inch)" />
+<!--       <cloud:param value="iOS 6.0 : iPad" />
+      <cloud:param value="iOS 6.0 : iPad (Retina)" /> -->
+    </cloud:run>
+  </target>
+
+  <target name="cloud-test-ios-device"
+    depends="copy-libs,require-cm-userpass"
+    description="Run tests on iOS Devices in Cloud Monkey">
+    <cloud:run pollInterval="${cm.pollInterval}"
+      verbose="${cm.verbose}"
+      reportDir="${fh.reportDir}"
+      timeout="${cm.timeout}"
+      thinktime="${cm.thinktime}"
+      username="${cm.username}"
+      password="${cm.password}"
+      type="${cm.typeIOS}"
+      binary="${fh.binaryIOSDevice}"
+      script="${fh.testSuite}">
+      <cloud:param value="iOS 6.1 : iPad 3 (Device)" />
+      <cloud:param value="iOS 6.1.2 : iPhone 3gs (Device)" />
+      <cloud:param value="iOS 6.1.2 : iPhone 4 (Device)" />
+    </cloud:run>
+  </target>
+
+  <target name="cloud-info"
+    description="Get Cloud Monkey version info and list of available emulators and devices"
+    depends="copy-libs">
+    <cloud:info/>
+  </target>
+
+  <target name="test"
+    description="Run all tests"
+    depends="local-test-android-emulator">
+  </target>
+
+</project>
