@@ -24,12 +24,11 @@ Test.MyTest.prototype.run = function() {
   // take a screenshot
   app.device().screenshot();
 
+  // verify the main div is visible
+  app.label('main').verify();
+
   // verify text in main div
-  app.label('main').verify('Hello World', {
-    thinktime:"1000",
-    retrydelay:"1000",
-    timeout:"30000"
-  });
+  app.label('main').verify('Hello World');
 
   // some log output
   app.debug().print("Finished MyTest");
