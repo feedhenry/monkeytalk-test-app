@@ -1,0 +1,26 @@
+{
+  "name": "monkeytalk-test-app_cloud",
+  "version": "0.0.1",
+  "description": "Cloud code for monkeytalk-test-app",
+  "main": "application.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/feedhenry/monkeytalk-test-app.git"
+  },
+  "keywords": [
+    "monkeytalk",
+    "feedhenry",
+    "nodejs",
+    "javascript",
+    "acceptance",
+    "test"
+  ],
+  "author": "david.martin@feedhenry.com",
+  "license": "BSD",
+  "dependencies": {
+    "fh-nodeapp": "~0.58.0"
+  }
+}
