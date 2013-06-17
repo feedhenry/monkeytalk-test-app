@@ -1,1 +1,46 @@
-<div id="main">Hello World</div>
+<h1>Test App</h1>
+<label for="init"><input id="init" name="init" type="text" value="">Init Success?</label>
+<label for="destination"><input id="destination" name="destination" type="text" value="">Destination</label>
+<label for="app_version"><input id="app_version" name="app_version" type="text" value="">App Version</label>
+<label for="appid"><input id="appid" name="appid" type="text" value="">App ID</label>
+<label for="appkey"><input id="appkey" name="appkey" type="text" value="">App Key</label>
+<label for="host"><input id="host" name="host" type="text" value="">Host</label>
+<label for="mode"><input id="mode" name="mode" type="text" value="">Mode</label>
+<label for="cuid"><input id="cuid" name="cuid" type="text" value="">CUID</label>
+<label for="agent"><input id="agent" name="agent" type="text" value="">Agent</label>
+<label for="actreq"><input id="actreq" name="actreq" type="text" value="">Act Request</label>
+<button id="makeactcall">Make Act Call</button><br/>
+<label for="act"><input id="act" name="act" type="text" value="">Act Call</label>
+<label for="actres"><input id="actres" name="actres" type="text" value="">Act Response</label>
+
+<script>
+$fh.ready({}, function(){
+  $fh.init(fh_config);
+  document.getElementById('destination').value = fh_destination_code;
+  document.getElementById('app_version').value = fh_app_version;
+  document.getElementById('appid').value = $fh.app_props.appid;
+  document.getElementById('appkey').value = $fh.app_props.appkey;
+  document.getElementById('host').value = $fh.app_props.host;
+  document.getElementById('mode').value = $fh.app_props.mode;
+  $fh.env({}, function(env) {
+    document.getElementById('init').value = 'ok';
+    document.getElementById('cuid').value = env.uuid;
+    document.getElementById('agent').value = env.agent;
+  });
+  document.getElementById('actreq').value = Date.now();
+
+  document.getElementById('makeactcall').onclick = function () {
+    $fh.act({
+      act: 'testCall',
+      req: {
+        ts: document.getElementById('actreq').value
+      }
+    }, function (res) {
+      document.getElementById('act').value = 'ok';
+      document.getElementById('actres').value = res.ts;
+    }, function (err, msg, props) {
+      document.getElementById('act').value = 'not ok';
+    });
+  };
+});
+ </script>
