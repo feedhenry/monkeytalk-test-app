@@ -220,9 +220,4 @@
     <cloud:info/>
   </target>
 
-  <target name="test"
-    description="Run all tests"
-    depends="local-test-android-emulator">
-  </target>
-
 </project>

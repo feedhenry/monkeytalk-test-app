@@ -11,7 +11,12 @@ Building a MonkeyTalk Instrumented App on the FeedHenry Platform (Android)
 * Hybrid Client > Build > Android > Debug > Build Now, and follow through the steps to download the android apk file.
 * Copy the apk file to ./test/fixtures/android.apk
 
-Testing (Android Emulator)
+Building a MonkeyTalk Instrumented App on the FeedHenry Platform (iOS - iOS Simulator)
+-------
+
+TODO
+
+Testing (Local Emulator - Android)
 -------
 
 List available avds
@@ -32,7 +37,7 @@ Install the apk & launch it manually from the emulator window
 
 Run the MonkeyTalk test against the running app in the emulator
 
-    ant test
+    ant local-test-android-emulator
 
 Expected output should be something like:
 
@@ -57,6 +62,26 @@ Expected output should be something like:
 
     BUILD SUCCESSFUL
     Total time: 3 seconds
+
+Testing (Local Device - Android)
+------
+
+TODO - ant local-test-android-device
+
+Testing (Local Device - iOS)
+------
+
+TODO - ant local-test-ios-device
+
+Testing (Cloud Devices & Emulators - Android)
+------
+
+TODO - ant cloud-test-android-device cloud-test-android-emulator
+
+Testing (Cloud Devices & Simulators - iOS)
+------
+
+TODO - ant cloud-test-ios-device cloud-test-ios-simulator
 
 Troubleshooting
 ----
