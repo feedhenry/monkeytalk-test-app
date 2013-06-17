@@ -1,7 +1,7 @@
 
-exports.getConfig = function(params, callback) {
-  console.log("In getConfig() call");
-  return callback(null, {config: 'hardcoded_config'});
+exports.testCall = function(params, callback) {
+  console.log("In testCall");
+  return callback(null, {ts: params.ts});
 };
 
 
