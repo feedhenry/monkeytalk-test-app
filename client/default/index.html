@@ -40,6 +40,7 @@ $fh.ready({}, function(){
       document.getElementById('actres').value = res.ts;
     }, function (err, msg, props) {
       document.getElementById('act').value = 'not ok';
+      document.getElementById('actres').value = 'err:' + err + ' msg:' + msg + ' props:' + props;
     });
   };
 });
