@@ -39,8 +39,9 @@ $fh.ready({}, function(){
       document.getElementById('act').value = 'ok';
       document.getElementById('actres').value = res.ts;
     }, function (err, msg, props) {
+      alert('err:' + err + ' msg:' + JSON.stringify(msg) + ' props:' + props);
       document.getElementById('act').value = 'not ok';
-      document.getElementById('actres').value = 'err:' + err + ' msg:' + msg + ' props:' + props;
+      document.getElementById('actres').value = 'err:' + err + ' msg:' + JSON.stringify(msg) + ' props:' + props;
     });
   };
 });
